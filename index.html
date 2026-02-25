@@ -77,58 +77,16 @@
             <p class="text-lg md:text-xl text-gray-300">欢迎来到我的私人角落，这里存放着我热爱的影像与记忆。</p>
         </section>
 
-        <!-- 照片墙板块 (响应式设计) -->
+        <!-- 照片墙板块 -->
         <section class="max-w-6xl w-full mb-20">
             <h2 class="text-2xl font-bold mb-8 flex items-center gap-2">
                 <span class="w-8 h-1 bg-blue-500 rounded-full"></span>
                 我的相册
             </h2>
             
-            <!-- Grid 布局：手机1列，平板2列，电脑3列 -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- 照片项示例 (你可以将 src 替换为你自己的图片链接) -->
-                <div class="photo-card glass-card">
-                    <img src="https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80" alt="风景照片1">
-                    <div class="photo-overlay text-sm font-light">
-                        山川与湖泊的静谧时刻
-                    </div>
-                </div>
-                
-                <div class="photo-card glass-card">
-                    <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=800&q=80" alt="风景照片2">
-                    <div class="photo-overlay text-sm font-light">
-                        雪山之巅的呼吸
-                    </div>
-                </div>
-
-                <div class="photo-card glass-card">
-                    <img src="https://images.unsplash.com/photo-1472214103451-9374bd1c798e?auto=format&fit=crop&w=800&q=80" alt="风景照片3">
-                    <div class="photo-overlay text-sm font-light">
-                        大自然的调色盘
-                    </div>
-                </div>
-
-                <!-- 更多占位照片 -->
-                <div class="photo-card glass-card">
-                    <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=800&q=80" alt="风景照片4">
-                    <div class="photo-overlay text-sm font-light">
-                        日落余晖
-                    </div>
-                </div>
-
-                <div class="photo-card glass-card">
-                    <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&w=800&q=80" alt="风景照片5">
-                    <div class="photo-overlay text-sm font-light">
-                        林间漫步
-                    </div>
-                </div>
-
-                <div class="photo-card glass-card">
-                    <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 p-6 text-center">
-                        <span class="text-4xl mb-2">📸</span>
-                        <p>更多照片期待中...</p>
-                    </div>
-                </div>
+            <!-- 这里是照片容器，ID 为 photo-grid -->
+            <div id="photo-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- JavaScript 将会在这里自动生成内容 -->
             </div>
         </section>
 
@@ -148,10 +106,56 @@
     </main>
 
     <script>
-        // 初始化背景动画 (同上版本)
+        /**
+         * 1. 照片数据配置
+         * 以后你只需要在这里增加新的对象，页面就会自动显示
+         */
+        const myPhotos = [
+            { src: 'images/paris.png', desc: '漫步巴黎街头' },
+            { src: 'images/photo2.png', desc: '记忆中的夏日' },
+            { src: 'images/photo3.png', desc: '落日余晖' },
+            // 你可以继续往下添加，比如：
+            // { src: 'images/photo4.jpg', desc: '旅行日记' },
+            // { src: 'images/photo10.jpg', desc: '生活碎片' },
+        ];
+
+        /**
+         * 2. 自动渲染函数
+         */
+        function renderPhotos() {
+            const grid = document.getElementById('photo-grid');
+            
+            // 清空当前内容
+            grid.innerHTML = '';
+
+            myPhotos.forEach(photo => {
+                const card = document.createElement('div');
+                card.className = 'photo-card glass-card';
+                card.innerHTML = `
+                    <img src="${photo.src}" alt="${photo.desc}" onerror="this.parentElement.style.display='none'">
+                    <div class="photo-overlay text-sm font-light">
+                        ${photo.desc}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+            
+            // 如果你想保留那个“期待中”的空位，可以手动加一个
+            const placeholder = document.createElement('div');
+            placeholder.className = 'photo-card glass-card';
+            placeholder.innerHTML = `
+                <div class="w-full h-full flex flex-col items-center justify-center text-gray-400 p-6 text-center">
+                    <span class="text-4xl mb-2">📸</span>
+                    <p>更多照片期待中...</p>
+                </div>
+            `;
+            grid.appendChild(placeholder);
+        }
+
+        // 初始化背景动画
         let scene, camera, renderer, particles;
 
-        function init() {
+        function initBackground() {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
             camera.position.z = 5;
@@ -187,7 +191,11 @@
             renderer.render(scene, camera);
         }
 
-        window.onload = init;
+        // 页面加载完成后执行
+        window.onload = () => {
+            initBackground();
+            renderPhotos();
+        };
     </script>
 </body>
 </html>
